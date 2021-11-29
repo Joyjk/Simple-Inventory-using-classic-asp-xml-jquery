@@ -1,0 +1,21 @@
+
+
+<producttbl>
+    <parts>
+        <part>
+            <product_name>Computer</product_name>
+            <parts_id>15232</parts_id>
+            <sku>456</sku>
+        </part>
+        <part>
+            <product_name>Computer</product_name>
+            <parts_id>19799</parts_id>
+            <sku>456</sku>
+        </part>
+        <part>
+            <product_name>Computer</product_name>
+            <parts_id>19590</parts_id>
+            <sku>456</sku>
+        </part>
+    </parts>
+</producttbl>

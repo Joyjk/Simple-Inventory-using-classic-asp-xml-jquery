@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product New Try</title>
+</head>
+
+<body>
+
+
+    <form method="post" id="form1">
+        <div>
+            <select id="inscompSelected" multiple="multiple" name="dropdown" class="lstSelected">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+
+    <hr />
+    <textarea id="xmlSrc" cols="70" rows="5"></textarea>
+
+    <div id="results">
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+
+
+        function buildXmlFromForm(form) {
+
+            var data = document.getElementById("inscompSelected");
+            for (var i = 0; i < data.options.length; i++) {
+                console.log(i)
+            }
+
+            
+            var xml1 = $('<Customer2 />');
+            for (var i = 0; i < 3; i++) {
+                xml1.append(
+
+
+                    
+
+                        $('<CustomerId />').text(i)
+                    
+
+
+
+                );
+            }
+
+
+            var xml = $('<XMLDocument />');
+            xml.append(
+                $('<Customer />').append(
+                    $('<MyData />').text("DATATA"),
+                    
+
+                       //$('<CustomerId />').text($("#inscompSelected").val())
+                       xml1
+                    
+
+                )
+
+            );
+
+
+            return xml.html();
+        }
+
+        // you should use POST or PUT method (not GET) to post xml-data to server side
+        $("#form1").submit(function (event) {
+            event.preventDefault();
+            $("#results").append("<ul></ul>");
+            var xmlString = buildXmlFromForm($(this));
+
+            $("#xmlSrc").val(xmlString);
+            $.ajax({
+                type: "POST",
+                dataType: 'xml',
+                // url: 'response.xml',
+                // url: 'myfile.asp',
+                //  data: xmlString,
+                // success: function(respData) {
+                //   $("<li></li>").html("ok: "+respData).appendTo("#results ul");
+                // //   $post("myfile.asp",{libid:respData})
+                //   console.log(respData);
+                // },
+                // error: function(errorData) {
+                //   $("<li></li>").html("error: "+errorData.statusText).appendTo("#results ul");
+                //   console.log(errorData);
+                // }
+            });
+            //   $.post("myfile.asp",{
+            //       file:xmlString
+            //   })
+            console.log(xmlString)
+
+
+
+
+
+
+        });
+    </script>
+</body>
+
+</html>

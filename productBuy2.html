@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Manufacture</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+
+    <h1 style="text-align: center; margin-top: 5%;">Product Manufacture</h1>
+    <div class="" style="margin-left: 30%;  margin-right: 30%;">
+        <form method="post" id="form1">
+
+        
+
+
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Product Name</label>
+                <select class="form-select" name="productsku" id="productname">
+                    <!-- <option selected>Choose...</option> -->
+
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Select Supplier</label>
+                <select class="form-select" name="supplierid" id="supplierFromPurchaseTBL">
+                    <option selected>Choose...</option>
+
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Select Parts id</label>
+                <select class="form-select" name="partsid" id="partswiseFromPurchase">
+                    <option selected>Choose...</option>
+                    <!-- <option value="1">DB_Parts_id</option>
+                    <option value="2">DB_Parts_id</option> -->
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Select Quantity</label>
+                <select class="form-select" name="quantitypro" id="quantityOfParts">
+                    <option selected>Choose...</option>
+                    <!-- <option value="1">DB_Quantity</option>
+                    <option value="2">DB_Quantity</option> -->
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Cost:</label>
+                <input type="hidden" name="costdata" class="form-control" id="costinputdata">
+                <span id="costcost"></span>
+            </div>
+
+            <!-- <div class="mb-3">
+                <label for="" class="form-label">Supervisor ID</label>
+                <input type="text" class="form-control" id="" placeholder="Purchase By Supervisor" readonly>
+            </div> -->
+
+
+
+
+            <button type="submit" value="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <textarea id="xmlSrc" cols="70" rows="5"></textarea>
+
+        <div id="results">
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var totalQuantity;
+            var totalPrice;
+            var perPiecePrice;
+            var costTotal;
+            var theSku;
+
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost/project/productDemoSkuReturnXML.asp',           // The file path.
+                dataType: 'xml',
+                success: function (xml) {
+                    //find all book tags, loop them and append to table body
+                    $(xml).find('sku').each(function () {
+
+                        //myData = xml;
+                        // Append new data to the tbody element.
+                        // $('#tableBody tbody').append(
+                        //     '<tr>' +
+                        //     '<td>' +
+                        //     $(this).find('customerid').text() + '</td> ' +
+                        //     '<td>' +
+                        //     $(this).find('name').text() + '</td> ' +
+                        //     '<td>' +
+                        //     $(this).find('country').text() + '</td> ' +
+                        //     '<td>'
+                        // );
+                        $('#productname').append(
+
+                            '<option value=' + $(this).find('sku').text() + ' >' + $(this).find('product_name').text() + '</option> '
+
+                        );
+
+
+                    });
+
+                }
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost/project/purchasePartsListXML.asp',           // The file path.
+                dataType: 'xml',
+                success: function (xml) {
+                    //find all book tags, loop them and append to table body
+                    $(xml).find('purchase').each(function () {
+
+                        // myData = xml;
+
+                        $('#supplierFromPurchaseTBL').append(
+
+                            '<option value=' + $(this).find('supplier_id').text() + ' >' + $(this).find('supplier_name').text() + '</option> '
+
+                        );
+
+
+                    });
+
+                }
+            });
+
+            $("#supplierFromPurchaseTBL").change(
+                function () {
+                    console.log(this.value)
+
+
+
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: "productFromPurchaseBySupplierIDxml.asp",
+                        dataType: "xml",
+                        data: {
+                            supplierid: this.value
+                        },
+                        success: function (xml) {
+                            $(xml).find('Purchase').each(function () {
+
+
+
+                                $('#partswiseFromPurchase').append(
+
+                                    '<option value=' + $(this).find('parts_id').text() + ' >' + $(this).find('parts_name').text() + '</option> '
+
+                                );
+                            });
+                        }
+
+                    })
+
+                    // console.log(typeof s)
+
+
+                }
+
+
+            );
+
+            $("#partswiseFromPurchase").change(
+                function () {
+                    console.log("The parts id: " + this.value)
+
+
+
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: "purchasePartsByPartsIdXML.asp",
+                        dataType: "xml",
+                        data: {
+                            partsid: this.value
+                        },
+                        success: function (xml) {
+                            $(xml).find('purchase').each(function () {
+
+                                totalQuantity = $(this).find('SumQTY').text()
+                                totalPrice = $(this).find('sumCost').text()
+
+
+                                // $('#partswiseFromPurchase').append(
+
+                                //     '<option value=' + $(this).find('parts_id').text() + ' >' + $(this).find('parts_name').text() + '</option> '
+
+                                // );
+                            });
+                        }
+
+                    })
+
+                    //console.log(typeof s)
+                    console.log("Total QTY: " + totalQuantity)
+                    console.log("Total Price: " + totalPrice)
+                    perPiecePrice = 0;
+                    perPiecePrice = totalPrice / totalQuantity
+
+
+
+                    for (var i = 1; i <= totalQuantity; i++) {
+                        $('#quantityOfParts').append(
+
+                            '<option value=' + i + ' >' + i + '</option> '
+
+                        );
+                    }
+
+
+                }
+
+
+            );
+
+            $("#quantityOfParts").change(
+                function () {
+                    costTotal = 0;
+                    console.log(this.value)
+
+                    costTotal = this.value * perPiecePrice
+                    console.log("Total cost: " + costTotal)
+
+                    $("#costinputdata").text(costTotal)
+                    document.getElementById("costcost").innerHTML = costTotal
+                    //costcost
+
+                    //costinput
+
+
+                    // $.ajax({
+                    //     type: "POST",
+                    //     url: "productFromPurchaseBySupplierIDxml.asp",
+                    //     dataType: "xml",
+                    //     data: {
+                    //         supplierid: this.value
+                    //     },
+                    //     success: function (xml) {
+                    //         $(xml).find('Purchase').each(function () {
+
+
+
+                    //             $('#partswiseFromPurchase').append(
+
+                    //                 '<option value=' + $(this).find('parts_id').text() + ' >' + $(this).find('parts_name').text() + '</option> '
+
+                    //             );
+                    //         });
+                    //     }
+
+                    // })
+
+
+
+
+                }
+
+
+            );
+
+            function buildXmlFromForm(form) {
+                var xml = $('<XMLDocument />');
+                xml.append(
+                    $('<Product />').append(
+                        $('<Cost />').text(costTotal)
+                    ).append(
+                        $('<Quantity />').text($("#quantityOfParts").val())
+                    ).append(
+                        $('<parts_id />').text($("#partswiseFromPurchase").val())
+                    ).append(
+                        $('<sku />').text($("#productname").val())
+                    )
+                );
+                    //supplierFromPurchaseTBL
+                    //costinputdata
+                    //quantityOfParts
+                    //partswiseFromPurchase
+                return xml.html();
+            }
+
+            $("#form1").submit(function (event) {
+                event.preventDefault();
+                $("#results").append("<ul></ul>");
+                var xmlString = buildXmlFromForm($(this));
+
+                $("#xmlSrc").val(xmlString);
+                var ddd = $("#productname").val();
+                //console.log(form.find("input[name='productsku']").val())
+                console.log("product sku"+ddd)
+                //productsku
+                $.ajax({
+                    //type: "POST",
+                   // dataType: 'xml',
+                    // url: 'response.xml',
+                  //  url: 'myfile.asp',
+                   // data: xmlString,
+
+
+                    // success: function(respData) {
+                    //   $("<li></li>").html("ok: "+respData).appendTo("#results ul");
+                    // //   $post("myfile.asp",{libid:respData})
+                    //   console.log(respData);
+                    // },
+                    // error: function(errorData) {
+                    //   $("<li></li>").html("error: "+errorData.statusText).appendTo("#results ul");
+                    //   console.log(errorData);
+                    // }
+                });
+
+
+                // $.post("myfile.asp", {
+                //     file: xmlString
+                // })
+                console.log(xmlString)
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>

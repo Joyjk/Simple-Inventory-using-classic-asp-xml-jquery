@@ -1,0 +1,110 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <select multiple>
+        <option>opt 1 text
+        <option value="opt 2 value">opt 2 text
+    </select>
+    <button onclick="
+        var el = document.getElementsByTagName('select')[0];
+        alert(getSelectValues(el));
+      ">Show selected values</button>
+
+
+    <script>
+        
+
+        function getSelectValues(select) {
+            var result = [];
+            var options = select && select.options;
+            var opt;
+
+            for (var i = 0, iLen = options.length; i < iLen; i++) {
+                opt = options[i];
+
+                if (opt.selected) {
+                    result.push(opt.value || opt.text);
+                }
+            }
+            return result;
+        }
+
+
+        console.log(getSelectValues())
+    </script>
+</body>
+
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+
+</head>
+
+<body>
+    <select multiple="multiple" id="alpha">
+        <option value="a">A</option>
+        <option value="b">B</option>
+        <option value="c">C</option>
+        <option value="d">D</option>
+    </select>
+    <input type="button" value="Submit" onclick="getMultipleSelectedValue()" />
+
+
+
+
+    <script>
+
+        var data = [];
+
+        function getMultipleSelectedValue() {
+
+
+            var x = document.getElementById("alpha");
+            for (var i = 0; i < x.options.length; i++) {
+                if (x.options[i].selected == true) {
+                    alert(x.options[i].value);
+                    data.push(x.options[i].value)
+                }
+            }
+            console.log(data)
+            var doc = document.implementation.createDocument("", "", null);
+            
+            //var personElem1= [];
+            for (var i = 0; i < data.length; i++) {
+                var peopleElem = doc.createElement("people")
+                var personElem1 = doc.createElement("person");
+                personElem1.setAttribute("first-name", "eric");
+                personElem1.setAttribute("middle-initial", "h");
+                personElem1.setAttribute("last-name", "jung");
+                peopleElem.appendChild(personElem1);    
+                 doc.appendChild(peopleElem)
+            
+                 console.log(doc)
+            
+
+            }
+
+           
+
+
+
+
+
+
+        }
+    </script>
+</body>
+
+</html>
+
